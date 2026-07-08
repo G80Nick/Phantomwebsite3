@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Phantom Views — Automotive &amp; Motorsport Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt:#0b0b0d;
+    --panel:#161619;
+    --panel-edge:#232327;
+    --chrome:#c7cbd1;
+    --chrome-dim:#7d8087;
+    --paper:#eeeeef;
+    --signal:#ff4e1f;
+    --caution:#f2c94c;
+    --radius:2px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--asphalt);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--signal); color:var(--asphalt);}
+
+  h1,h2,h3,.display{
+    font-family:'Oswald', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    font-weight:600;
+  }
+  .mono{
+    font-family:'JetBrains Mono', monospace;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  .wrap{max-width:1360px; margin:0 auto; padding:0 40px;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--signal);
+    outline-offset:3px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(11,11,13,0.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    transition:border-color .3s;
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:76px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+  }
+  .plate-mark{
+    width:34px; height:34px;
+    border:1.5px solid var(--signal);
+    border-radius:3px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; font-weight:500;
+    color:var(--signal);
+    letter-spacing:0;
+  }
+  .brand-name{
+    font-family:'Oswald', sans-serif;
+    font-size:18px; font-weight:600;
+    letter-spacing:0.06em;
+  }
+  .brand-name span{color:var(--signal);}
+  .navlinks{display:flex; gap:36px; align-items:center;}
+  .navlinks a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:var(--chrome);
+    position:relative;
+    padding:6px 0;
+  }
+  .navlinks a::after{
+    content:'';
+    position:absolute; left:0; bottom:0;
+    width:0; height:1px; background:var(--signal);
+    transition:width .25s ease;
+  }
+  .navlinks a:hover::after, .navlinks a:focus-visible::after{width:100%;}
+  .navlinks a.cta{
+    color:var(--asphalt); background:var(--paper);
+    padding:9px 16px; border-radius:2px;
+    letter-spacing:0.06em;
+  }
+  .navlinks a.cta::after{display:none;}
+  .navlinks a.cta:hover{background:var(--signal); color:var(--paper);}
+  .navtoggle{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    height:100vh; min-height:640px;
+    display:flex; align-items:flex-end;
+    overflow:hidden;
+  }
+  .hero-img{
+    position:absolute; inset:0;
+    width:100%; height:100%; object-fit:cover;
+    object-position:center 38%;
+    filter:brightness(0.62) saturate(1.05);
+    transform:scale(1.06);
+    animation:heroIn 1.6s ease forwards;
+  }
+  @keyframes heroIn{
+    from{transform:scale(1.12); filter:brightness(0.3) saturate(1.05);}
+    to{transform:scale(1.06); filter:brightness(0.62) saturate(1.05);}
+  }
+  .hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(11,11,13,0.96) 0%, rgba(11,11,13,0.25) 55%, rgba(11,11,13,0.55) 100%);
+    z-index:1;
+  }
+  .hero-content{
+    position:relative; z-index:2;
+    padding:0 40px 88px;
+    max-width:1360px; margin:0 auto; width:100%;
+  }
+  .hero-eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; letter-spacing:0.14em;
+    color:var(--caution);
+    margin-bottom:22px;
+    opacity:0; animation:fadeUp .8s ease .5s forwards;
+  }
+  .hero-eyebrow .dash{width:28px; height:1px; background:var(--caution);}
+  .hero h1{
+    font-size:clamp(2.6rem, 7.2vw, 6.4rem);
+    line-height:0.94;
+    max-width:900px;
+    opacity:0; animation:fadeUp .8s ease .65s forwards;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--signal);
+  }
+  .hero-sub{
+    margin-top:26px;
+    max-width:480px;
+    font-size:16px; line-height:1.6;
+    color:var(--chrome);
+    opacity:0; animation:fadeUp .8s ease .8s forwards;
+  }
+  .hero-meta{
+    margin-top:40px;
+    display:flex; gap:32px; flex-wrap:wrap;
+    opacity:0; animation:fadeUp .8s ease .95s forwards;
+  }
+  .hero-meta div{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--chrome-dim);}
+  .hero-meta strong{display:block; color:var(--paper); font-size:14px; margin-top:4px; letter-spacing:0.02em;}
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(18px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .scroll-cue{
+    position:absolute; right:40px; bottom:36px; z-index:2;
+    writing-mode:vertical-rl;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:0.15em; color:var(--chrome-dim);
+    display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue::after{
+    content:''; width:1px; height:46px; background:var(--chrome-dim);
+    animation:cue 2s ease-in-out infinite;
+  }
+  @keyframes cue{0%,100%{opacity:.25;} 50%{opacity:1;}}
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{padding:120px 0;}
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:24px; margin-bottom:56px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding-bottom:28px;
+  }
+  .section-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; color:var(--signal); letter-spacing:0.12em;
+    margin-bottom:14px; display:block;
+  }
+  .section-head h2{font-size:clamp(1.8rem, 3.4vw, 3rem);}
+  .section-head p{
+    max-width:340px; color:var(--chrome-dim); font-size:14px; line-height:1.6;
+    padding-bottom:6px;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:18px;
+  }
+  .plate{
+    position:relative;
+    overflow:hidden;
+    border-radius:var(--radius);
+    background:var(--panel);
+    border:1px solid var(--panel-edge);
+    cursor:pointer;
+    opacity:0; transform:translateY(24px);
+    transition:transform .6s cubic-bezier(.2,.7,.3,1), opacity .6s ease, box-shadow .3s ease;
+  }
+  .plate.in-view{opacity:1; transform:translateY(0);}
+  .plate img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .7s cubic-bezier(.2,.7,.3,1), filter .5s ease;
+    filter:grayscale(0.06) contrast(1.03);
+  }
+  .plate:hover img{transform:scale(1.055); filter:grayscale(0) contrast(1.08);}
+  .plate .frame{position:relative; width:100%; height:100%;}
+
+  .plate.span-4{grid-column:span 4;}
+  .plate.span-2{grid-column:span 2;}
+  .plate.span-3{grid-column:span 3;}
+  .plate.h-tall .frame{aspect-ratio:4/5;}
+  .plate.h-wide .frame{aspect-ratio:16/9;}
+  .plate.h-sq .frame{aspect-ratio:1/1;}
+
+  .tag-corner{
+    position:absolute; top:0; left:0; z-index:3;
+    background:var(--caution);
+    color:var(--asphalt);
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px; font-weight:500; letter-spacing:0.06em;
+    padding:5px 9px 5px 8px;
+    clip-path:polygon(0 0, 100% 0, 88% 100%, 0% 100%);
+  }
+  .caption-strip{
+    position:absolute; left:0; right:0; bottom:0; z-index:3;
+    padding:14px 16px 12px;
+    background:linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.0) 100%);
+    transform:translateY(6px);
+    opacity:0.92;
+    transition:transform .35s ease;
+  }
+  .plate:hover .caption-strip{transform:translateY(0);}
+  .caption-strip .model{
+    font-family:'Oswald', sans-serif; font-size:15px; letter-spacing:0.03em;
+    text-transform:uppercase; color:var(--paper);
+  }
+  .caption-strip .loc{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--chrome-dim);
+    margin-top:3px; letter-spacing:0.03em;
+  }
+  .lot-no{
+    position:absolute; top:12px; right:12px; z-index:3;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; color:var(--chrome);
+    background:rgba(11,11,13,0.55);
+    border:1px solid rgba(255,255,255,0.18);
+    padding:3px 7px; border-radius:2px;
+    backdrop-filter:blur(3px);
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:64px;
+    align-items:center;
+  }
+  .about-img-wrap{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    aspect-ratio:4/5;
+  }
+  .about-img-wrap img{width:100%; height:100%; object-fit:cover;}
+  .about-copy .section-tag{margin-bottom:18px;}
+  .about-copy h2{font-size:clamp(1.8rem,3.2vw,2.8rem); margin-bottom:22px; line-height:1.08;}
+  .about-copy p{color:var(--chrome); line-height:1.8; font-size:15.5px; margin-bottom:18px; max-width:520px;}
+  .spec-list{
+    margin-top:36px;
+    display:grid; grid-template-columns:1fr 1fr; gap:20px 32px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    padding-top:28px;
+  }
+  .spec-list div{font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--chrome-dim); letter-spacing:0.06em;}
+  .spec-list strong{display:block; color:var(--paper); font-family:'Inter'; font-size:15px; font-weight:600; margin-top:6px;}
+
+  /* ---------- SERVICES / SPEC SHEET ---------- */
+  .services{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:1px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .service{
+    background:var(--asphalt);
+    padding:40px 34px;
+  }
+  .service .num{
+    font-family:'JetBrains Mono', monospace; color:var(--signal); font-size:13px; margin-bottom:22px; display:block;
+  }
+  .service h3{font-size:22px; margin-bottom:14px;}
+  .service p{color:var(--chrome-dim); font-size:14.5px; line-height:1.7;}
+
+  /* ---------- CONTACT ---------- */
+  .contact{
+    background:var(--panel);
+    border-top:1px solid var(--panel-edge);
+    border-bottom:1px solid var(--panel-edge);
+  }
+  .contact-inner{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:64px; align-items:end;
+  }
+  .contact h2{font-size:clamp(2.2rem,5vw,4.2rem); line-height:1.02;}
+  .contact h2 span{color:var(--signal);}
+  .contact-form{
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field label{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--chrome-dim); letter-spacing:0.08em;
+  }
+  .field input, .field textarea{
+    background:transparent;
+    border:none; border-bottom:1px solid rgba(255,255,255,0.2);
+    color:var(--paper); font-family:'Inter'; font-size:15px;
+    padding:10px 2px;
+    transition:border-color .25s ease;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none; border-bottom-color:var(--signal);
+  }
+  .field textarea{resize:vertical; min-height:70px;}
+  .submit-row{
+    margin-top:8px; display:flex; align-items:center; gap:18px;
+  }
+  .btn-send{
+    background:var(--signal); color:var(--asphalt);
+    border:none; padding:14px 28px; border-radius:2px;
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:0.1em;
+    text-transform:uppercase; cursor:pointer;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .btn-send:hover{background:#ff6b41; transform:translateY(-1px);}
+  .form-note{font-size:12px; color:var(--chrome-dim); font-family:'JetBrains Mono', monospace;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:44px 0 60px;}
+  .footer-inner{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--chrome-dim);
+    letter-spacing:0.04em;
+  }
+  .footer-inner a{color:var(--chrome); border-bottom:1px solid transparent;}
+  .footer-inner a:hover{border-bottom-color:var(--signal); color:var(--paper);}
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(6,6,7,0.96);
+    display:none; align-items:center; justify-content:center;
+    padding:60px 40px;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{
+    max-width:100%; max-height:82vh; object-fit:contain;
+    border:1px solid rgba(255,255,255,0.12);
+  }
+  .lightbox-cap{
+    position:absolute; left:0; right:0; bottom:28px; text-align:center;
+  }
+  .lightbox-cap .model{font-family:'Oswald'; text-transform:uppercase; letter-spacing:0.04em; font-size:16px;}
+  .lightbox-cap .loc{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--chrome-dim); margin-top:4px;}
+  .lightbox-close{
+    position:absolute; top:26px; right:32px;
+    font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--chrome);
+    background:none; border:1px solid rgba(255,255,255,0.25); border-radius:2px;
+    padding:8px 14px; cursor:pointer;
+  }
+  .lightbox-close:hover{border-color:var(--signal); color:var(--signal);}
+  .lightbox-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:none; border:1px solid rgba(255,255,255,0.25); color:var(--chrome);
+    width:44px; height:44px; border-radius:50%; cursor:pointer; font-size:18px;
+  }
+  .lightbox-nav:hover{border-color:var(--signal); color:var(--signal);}
+  .lightbox-prev{left:24px;}
+  .lightbox-next{right:24px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1080px){
+    .gallery{grid-template-columns:repeat(4,1fr);}
+    .plate.span-4{grid-column:span 4;}
+    .plate.span-3{grid-column:span 4;}
+    .plate.span-2{grid-column:span 2;}
+    .about{grid-template-columns:1fr; }
+    .about-img-wrap{max-width:420px;}
+    .contact-inner{grid-template-columns:1fr; gap:40px;}
+    .services{grid-template-columns:1fr;}
+  }
+  @media (max-width:760px){
+    .wrap{padding:0 22px;}
+    .navlinks{
+      position:fixed; top:76px; left:0; right:0; bottom:0;
+      background:var(--asphalt);
+      flex-direction:column; align-items:flex-start;
+      padding:36px 26px; gap:26px;
+      transform:translateX(100%);
+      transition:transform .35s ease;
+    }
+    .navlinks.open{transform:translateX(0);}
+    .navlinks a{font-size:15px;}
+    .navtoggle{
+      display:block; background:none; border:1px solid rgba(255,255,255,0.25);
+      color:var(--paper); width:38px; height:38px; border-radius:2px; cursor:pointer; font-size:16px;
+    }
+    .hero-content{padding:0 22px 64px;}
+    .section{padding:80px 0;}
+    .gallery{grid-template-columns:repeat(2,1fr); gap:12px;}
+    .plate.span-4, .plate.span-3, .plate.span-2{grid-column:span 2;}
+    .section-head{flex-direction:column; align-items:flex-start; gap:14px;}
+    .scroll-cue{display:none;}
+    .lightbox-nav{width:36px; height:36px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="brand">
+      <div class="plate-mark">3D</div>
+      <div class="brand-name">PHANTOM<span>·</span>VIEWS</div>
+    </div>
+    <button class="navtoggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <div class="navlinks" id="navLinks">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact" class="cta">Book a shoot</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <img class="hero-img" src="C:\Users\nicho\OneDrive\Desktop\FRONTENDPROJECT\_DSC4452.jpg">
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="dash"></span>MICHIGAN &nbsp;·&nbsp; CARS &amp; MOTORSPORT PHOTOGRAPHY</div>
+    <h1>Shot at the<br><em>redline,</em> printed<br>with grain.</h1>
+    <p class="hero-sub">Automotive portraiture for owners, builders, and the meets that stop traffic — from cars &amp; coffee lots to the concept floor.</p>
+    <div class="hero-meta">
+      <div>BASED<strong>Metro Detroit, MI</strong></div>
+      <div>SPECIALTY<strong>Automotive &amp; Motorsport</strong></div>
+      <div>FORMAT<strong>Full-frame · Available light</strong></div>
+    </div>
+  </div>
+  <div class="scroll-cue">SCROLL</div>
+</section>
+
+<main>
+
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="section-tag">// 001 — SELECTED WORK</span>
+          <h2>From the grid to the alley</h2>
+        </div>
+        <p>Seventeen rolls, one obsession: the way light lands on sheet metal. A running log from recent meets, reveals, and one very patient vintage 911.</p>
+      </div>
+
+      <div class="gallery" id="gallery">
+
+        <div class="plate span-4 h-wide" data-full="images/_DSC4038.jpg" data-model="Bugatti Chiron Super Sport" data-loc="Cars &amp; coffee — downtown crowd draw">
+          <div class="frame"><img src="C:\Users\nicho\OneDrive\Desktop\FRONTENDPROJECT\_DSC4452.jpg" loading="lazy"></div>
+          <span class="tag-corner">HYPERCAR</span>
+          <span class="lot-no">LOT 07</span>
+          <div class="caption-strip"><div class="model">Bugatti Chiron Super Sport</div><div class="loc">Downtown crowd draw</div></div>
+        </div>
+
+        <div class="plate span-2 h-tall" data-full="images/_DSC4038.jpg" data-model="Bugatti Chiron Super Sport — W16" data-loc="Detail, 1600hp badge">
+          <div class="frame"><img src="C:\Users\nicho\OneDrive\Desktop\FRONTENDPROJECT\_DSC4455.jpg" loading="lazy"></div>
+          <span class="tag-corner">DETAIL</span>
+          <span class="lot-no">LOT 09</span>
+          <div class="caption-strip"><div class="model">W16 · 1600HP</div><div class="loc">Engine bay detail</div></div>
+        </div>
+
+        <div class="plate span-2 h-sq" data-full="images/_DSC4042.jpg" data-model="Bugatti Chiron Super Sport" data-loc="Three-quarter, morning light">
+          <div class="frame"><img src="images/_DSC4042.jpg" loading="lazy"></div>
+          <span class="tag-corner">HYPERCAR</span>
+          <span class="lot-no">LOT 06</span>
+          <div class="caption-strip"><div class="model">Bugatti Chiron SS</div><div class="loc">Morning arrival</div></div>
+        </div>
+
+        <div class="plate span-4 h-wide" data-full="images/_DSC4052.jpg" data-model="Bugatti Chiron vs. Porsche 911 GT3 RS" data-loc="Rear deck, holding court">
+          <div class="frame"><img src="images/_DSC4052.jpg" loading="lazy"></div>
+          <span class="tag-corner">HYPERCAR</span>
+          <span class="lot-no">LOT 10</span>
+          <div class="caption-strip"><div class="model">Chiron &amp; GT3 RS</div><div class="loc">Rear deck, holding court</div></div>
+        </div>
+
+        <div class="plate span-3 h-sq" data-full="images/_DSC4060.jpg" data-model="Chevrolet Silverado EV ZR2" data-loc="GM Design Studio reveal">
+          <div class="frame"><img src="images/_DSC4060.jpg" loading="lazy"></div>
+          <span class="tag-corner">CONCEPT REVEAL</span>
+          <span class="lot-no">LOT 02</span>
+          <div class="caption-strip"><div class="model">Silverado EV ZR2</div><div class="loc">GM design studio reveal</div></div>
+        </div>
+
+        <div class="plate span-3 h-sq" data-full="images/_DSC4053.jpg" data-model="Track Concept Livery" data-loc="Pirelli slick, studio floor">
+          <div class="frame"><img src="images/_DSC4053.jpg" loading="lazy"></div>
+          <span class="tag-corner">CONCEPT</span>
+          <span class="lot-no">LOT 01</span>
+          <div class="caption-strip"><div class="model">Track Concept Livery</div><div class="loc">Studio floor, Pirelli slick</div></div>
+        </div>
+
+        <div class="plate span-3 h-tall" data-full="images/4063.jpg" data-model="BMW E92 M3" data-loc="Cars &amp; coffee, bronze BBS">
+          <div class="frame"><img src="images/4063.jpg" loading="lazy"></div>
+          <span class="tag-corner">CARS &amp; COFFEE</span>
+          <span class="lot-no">LOT 03</span>
+          <div class="caption-strip"><div class="model">BMW E92 M3</div><div class="loc">Bronze BBS, morning meet</div></div>
+        </div>
+
+        <div class="plate span-3 h-tall" data-full="images/4253.jpg" data-model="Pit-Lane Ritual" data-loc="Helmet, BMW M lineup">
+          <div class="frame"><img src="images/4253.jpg" loading="lazy"></div>
+          <span class="tag-corner">CARS &amp; COFFEE</span>
+          <span class="lot-no">LOT 04</span>
+          <div class="caption-strip"><div class="model">Pit-Lane Ritual</div><div class="loc">Helmet, M-car lineup</div></div>
+        </div>
+
+        <div class="plate span-3 h-wide" data-full="images/4455.jpg" data-model="Porsche 911 Targa Interior" data-loc="Cognac leather, houndstooth">
+          <div class="frame"><img src="images/4455.jpg" loading="lazy"></div>
+          <span class="tag-corner">INTERIOR STUDY</span>
+          <span class="lot-no">LOT 11</span>
+          <div class="caption-strip"><div class="model">Cognac &amp; Houndstooth</div><div class="loc">Porsche 911 Targa cabin</div></div>
+        </div>
+
+        <div class="plate span-3 h-wide" data-full="images/4524.jpg" data-model="Porsche 911 Seat Detail" data-loc="Embossed crest, stitched cognac">
+          <div class="frame"><img src="images/4524.jpg" loading="lazy"></div>
+          <span class="tag-corner">INTERIOR STUDY</span>
+          <span class="lot-no">LOT 12</span>
+          <div class="caption-strip"><div class="model">Porsche Crest, Stitched</div><div class="loc">Seat detail</div></div>
+        </div>
+
+        <div class="plate span-2 h-tall" data-full="images/4530.jpg" data-model="Vintage Porsche 911" data-loc="Loading dock, daylight">
+          <div class="frame"><img src="images/4530.jpg" loading="lazy"></div>
+          <span class="tag-corner">RESTORATION</span>
+          <span class="lot-no">LOT 13</span>
+          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc">Loading dock, daylight</div></div>
+        </div>
+
+        <div class="plate span-2 h-tall" data-full="images/4534.jpg" data-model="Vintage Porsche 911" data-loc="Golden hour, front three-quarter">
+          <div class="frame"><img src="images/4534.jpg" loading="lazy"></div>
+          <span class="tag-corner">RESTORATION</span>
+          <span class="lot-no">LOT 14</span>
+          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc">Golden hour</div></div>
+        </div>
+
+        <div class="plate span-2 h-tall" data-full="images/_DSC4053.jpg" data-model="Vintage Porsche 911" data-loc="Low angle, brick backdrop">
+          <div class="frame"><img src="images/_DSC4053.jpg" loading="lazy"></div>
+          <span class="tag-corner">RESTORATION</span>
+          <span class="lot-no">LOT 15</span>
+          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc">Low angle, brick backdrop</div></div>
+        </div>
+
+        <div class="plate span-6 h-wide" data-full="images/4576.jpg" data-model="Vintage Porsche 911" data-loc="Side profile, alleyway light">
+          <div class="frame"><img src="images/4576.jpg" loading="lazy"></div>
+          <span class="tag-corner">RESTORATION</span>
+          <span class="lot-no">LOT 16</span>
+          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc">Side profile, alleyway light</div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="wrap about">
+      <div class="about-img-wrap">
+        <img src="images/_DSC4053.jpg" loading="lazy">
+      </div>
+      <div class="about-copy">
+        <span class="section-tag">// 002 — ABOUT</span>
+        <h2>I show up early, before the crowd finds the good light.</h2>
+        <p>I'm a Michigan-based photographer who spends most weekends in parking lots, alleyways, and showroom floors — wherever the cars are. My work leans documentary: real meets, real light, real crowds pressing in with their phones up.</p>
+        <p>Whether it's a seven-figure hypercar or a patina'd 911 parked behind a bar, I shoot both the same way — with respect for the machine and patience for the moment it actually looks like itself.</p>
+        <div class="spec-list">
+          <div>YEARS SHOOTING<strong>8+</strong></div>
+          <div>EVENTS COVERED<strong>120+ meets &amp; reveals</strong></div>
+          <div>TURNAROUND<strong>48–72 hrs, edited set</strong></div>
+          <div>DELIVERY<strong>Private online gallery</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="section-tag">// 003 — SERVICES</span>
+          <h2>Book the shoot that fits your build</h2>
+        </div>
+        <p>Every package includes a private gallery, full-resolution downloads, and web-ready edits for socials and listings.</p>
+      </div>
+      <div class="services">
+        <div class="service">
+          <span class="num">01</span>
+          <h3>Owner Sessions</h3>
+          <p>A dedicated hour with your car — driveway, garage, or a location we scout together. Built for build threads, sale listings, and the wall print you'll actually hang.</p>
+        </div>
+        <div class="service">
+          <span class="num">02</span>
+          <h3>Meets &amp; Cars and Coffee</h3>
+          <p>Documentary coverage of your local meet or club event. Candid arrivals, detail shots, and the crowd energy that makes people wish they'd been there.</p>
+        </div>
+        <div class="service">
+          <span class="num">03</span>
+          <h3>Reveals &amp; Concept Floors</h3>
+          <p>Studio-lit or showroom coverage for dealerships, design studios, and brand reveals — clean detail work alongside the full unveil story.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap section">
+      <div class="contact-inner">
+        <div>
+          <span class="section-tag">// 004 — GET IN TOUCH</span>
+          <h2>Got a build worth<br><span>shooting?</span></h2>
+        </div>
+        <form class="contact-form" onsubmit="event.preventDefault(); this.reset(); document.getElementById('formMsg').textContent='Message sent. I\'ll reply within 48 hours.';">
+          <div class="field">
+            <label for="name">NAME</label>
+            <input id="name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="email">EMAIL</label>
+            <input id="email" type="email" required>
+          </div>
+          <div class="field">
+            <label for="details">TELL ME ABOUT THE CAR / EVENT</label>
+            <textarea id="details" required></textarea>
+          </div>
+          <div class="submit-row">
+            <button type="submit" class="btn-send">Send message</button>
+            <span class="form-note" id="formMsg">Usually reply within 48 hrs.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>© <span id="year"></span> PHANTOM 3D VIEWS — METRO DETROIT, MI</div>
+    <div><a href="#work">Instagram</a> &nbsp;·&nbsp; <a href="mailto:hello@phantom3dviews.com">hello@phantom3dviews.com</a></div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lbClose">CLOSE ✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous image">‹</button>
+  <img id="lbImg" src="">
+  <button class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next image">›</button>
+  <div class="lightbox-cap">
+    <div class="model" id="lbModel"></div>
+    <div class="loc" id="lbLoc"></div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // mobile nav
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+    navToggle.textContent = isOpen ? '✕' : '☰';
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.textContent = '☰';
+    navToggle.setAttribute('aria-expanded', false);
+  }));
+
+  // scroll reveal
+  const plates = document.querySelectorAll('.plate');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+  }, {threshold:0.15});
+  plates.forEach(p => io.observe(p));
+
+  // lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbModel = document.getElementById('lbModel');
+  const lbLoc = document.getElementById('lbLoc');
+  const gallery = Array.from(plates);
+  let currentIndex = 0;
+
+  function openLightbox(index){
+    currentIndex = index;
+    const p = gallery[index];
+    lbImg.src = p.dataset.full;
+    lbImg.removeAttribute('alt');
+    lbModel.textContent = p.dataset.model;
+    lbLoc.textContent = p.dataset.loc;
+    lightbox.classList.add('open');
+  }
+  function closeLightbox(){ lightbox.classList.remove('open'); }
+  function step(dir){
+    currentIndex = (currentIndex + dir + gallery.length) % gallery.length;
+    openLightbox(currentIndex);
+  }
+
+  gallery.forEach((p, i) => p.addEventListener('click', () => openLightbox(i)));
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbPrev').addEventListener('click', () => step(-1));
+  document.getElementById('lbNext').addEventListener('click', () => step(1));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+</script>
+
+</body>
+</html>
