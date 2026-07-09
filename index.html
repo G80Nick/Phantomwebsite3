@@ -480,7 +480,7 @@
           <span class="section-tag">// 001 — SELECTED WORK</span>
           <h2>From the grid to the alley</h2>
         </div>
-        <p>Seventeen rolls, one obsession: the way light lands on sheet metal. A running log from recent meets, reveals, and one very patient vintage 911.</p>
+        <p></p>
       </div>
 
       <div class="gallery" id="gallery">
@@ -733,16 +733,26 @@
   const contactForm = document.getElementById('contactForm');
   const formMsg = document.getElementById('formMsg');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const details = document.getElementById('details').value.trim();
-      const subject = encodeURIComponent(`New inquiry from ${name || 'website contact'}`);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nJob description / details:\n${details}`);
-      window.location.href = `mailto:phantom3dviews@gmail.com?subject=${subject}&body=${body}`;
-      contactForm.reset();
-      formMsg.textContent = 'Opening your email app…';
+
+      formMsg.textContent = 'Sending…';
+
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, details })
+        });
+        const data = await response.json();
+        contactForm.reset();
+        formMsg.textContent = data.message || 'Thanks for reaching out.';
+      } catch (error) {
+        formMsg.textContent = 'There was an issue sending the message. Please try again.';
+      }
     });
   }
 </script>
