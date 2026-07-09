@@ -629,18 +629,18 @@
           <span class="section-tag">// 004 — GET IN TOUCH</span>
           <h2>Got a build worth<br><span>shooting?</span></h2>
         </div>
-        <form class="contact-form" onsubmit="event.preventDefault(); this.reset(); document.getElementById('formMsg').textContent='Message sent. I\'ll reply within 48 hours.';">
+        <form id="contactForm" class="contact-form">
           <div class="field">
             <label for="name">NAME</label>
-            <input id="name" type="text" required>
+            <input id="name" name="name" type="text" required>
           </div>
           <div class="field">
             <label for="email">EMAIL</label>
-            <input id="email" type="email" required>
+            <input id="email" name="email" type="email" required>
           </div>
           <div class="field">
             <label for="details">TELL ME ABOUT THE CAR / EVENT</label>
-            <textarea id="details" required></textarea>
+            <textarea id="details" name="details" required></textarea>
           </div>
           <div class="submit-row">
             <button type="submit" class="btn-send">Send message</button>
@@ -729,6 +729,22 @@
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
   });
+
+  const contactForm = document.getElementById('contactForm');
+  const formMsg = document.getElementById('formMsg');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const details = document.getElementById('details').value.trim();
+      const subject = encodeURIComponent(`New inquiry from ${name || 'website contact'}`);
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nJob description / details:\n${details}`);
+      window.location.href = `mailto:phantom3dviews@gmail.com?subject=${subject}&body=${body}`;
+      contactForm.reset();
+      formMsg.textContent = 'Opening your email app…';
+    });
+  }
 </script>
 
 </body>
