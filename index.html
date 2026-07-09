@@ -283,16 +283,14 @@
     gap:64px;
     align-items:center;
   }
-  .about-img-wrap{
-    position:relative;
-    border-radius:var(--radius);
-    overflow:hidden;
-    aspect-ratio:4/5;
+  .about-copy--solo{
+    max-width:860px;
+    margin:0 auto;
+    text-align:left;
   }
-  .about-img-wrap img{width:100%; height:100%; object-fit:cover;}
   .about-copy .section-tag{margin-bottom:18px;}
   .about-copy h2{font-size:clamp(1.8rem,3.2vw,2.8rem); margin-bottom:22px; line-height:1.08;}
-  .about-copy p{color:var(--chrome); line-height:1.8; font-size:15.5px; margin-bottom:18px; max-width:520px;}
+  .about-copy p{color:var(--chrome); line-height:1.8; font-size:15.5px; margin-bottom:18px; max-width:760px;}
   .spec-list{
     margin-top:36px;
     display:grid; grid-template-columns:1fr 1fr; gap:20px 32px;
@@ -585,11 +583,8 @@
   </section>
 
   <section class="section" id="about">
-    <div class="wrap about">
-      <div class="about-img-wrap">
-        <img src="about-portrait.jpg?v=3" loading="lazy" alt="Photographer portrait">
-      </div>
-      <div class="about-copy">
+    <div class="wrap">
+      <div class="about-copy about-copy--solo">
         <span class="section-tag">// 002 — ABOUT</span>
         <h2>I show up early, before the crowd finds the good light.</h2>
         <p>I'm a Michigan-based photographer who spends most weekends in parking lots, alleyways, and showroom floors — wherever the cars are. My work leans documentary: real meets, real light, real crowds pressing in with their phones up.</p>
