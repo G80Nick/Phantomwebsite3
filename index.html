@@ -733,26 +733,29 @@
   const contactForm = document.getElementById('contactForm');
   const formMsg = document.getElementById('formMsg');
   if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
+    contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
+
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const details = document.getElementById('details').value.trim();
 
-      formMsg.textContent = 'Sending…';
-
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, details })
-        });
-        const data = await response.json();
-        contactForm.reset();
-        formMsg.textContent = data.message || 'Thanks for reaching out.';
-      } catch (error) {
-        formMsg.textContent = 'There was an issue sending the message. Please try again.';
+      if (!name || !email || !details) {
+        formMsg.textContent = 'Please complete all fields.';
+        return;
       }
+
+      formMsg.textContent = 'Opening Gmail…';
+      contactForm.reset();
+
+      const gmailUrl = new URL('https://mail.google.com/mail/');
+      gmailUrl.searchParams.set('view', 'cm');
+      gmailUrl.searchParams.set('fs', '1');
+      gmailUrl.searchParams.set('to', 'phantom3dviews@gmail.com');
+      gmailUrl.searchParams.set('su', `New inquiry from ${name}`);
+      gmailUrl.searchParams.set('body', `Name: ${name}\nEmail: ${email}\n\n${details}`);
+
+      window.location.href = gmailUrl.toString();
     });
   }
 </script>
