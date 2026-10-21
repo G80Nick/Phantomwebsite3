@@ -251,21 +251,7 @@
     clip-path:polygon(0 0, 100% 0, 88% 100%, 0% 100%);
   }
   .caption-strip{
-    position:absolute; left:0; right:0; bottom:0; z-index:3;
-    padding:14px 16px 12px;
-    background:linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.0) 100%);
-    transform:translateY(6px);
-    opacity:0.92;
-    transition:transform .35s ease;
-  }
-  .plate:hover .caption-strip{transform:translateY(0);}
-  .caption-strip .model{
-    font-family:'Oswald', sans-serif; font-size:15px; letter-spacing:0.03em;
-    text-transform:uppercase; color:var(--paper);
-  }
-  .caption-strip .loc{
-    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--chrome-dim);
-    margin-top:3px; letter-spacing:0.03em;
+    display:none;
   }
   .lot-no{
     position:absolute; top:12px; right:12px; z-index:3;
@@ -382,10 +368,8 @@
     border:1px solid rgba(255,255,255,0.12);
   }
   .lightbox-cap{
-    position:absolute; left:0; right:0; bottom:28px; text-align:center;
+    display:none;
   }
-  .lightbox-cap .model{font-family:'Oswald'; text-transform:uppercase; letter-spacing:0.04em; font-size:16px;}
-  .lightbox-cap .loc{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--chrome-dim); margin-top:4px;}
   .lightbox-close{
     position:absolute; top:26px; right:32px;
     font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--chrome);
@@ -490,91 +474,78 @@
           <div class="frame"><img src="dsc4455.jpg" loading="lazy"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 07</span>
-          <div class="caption-strip"><div class="model">Bugatti Chiron SS</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-2 h-tall" data-full="dsc4524.jpg" data-model="Bugatti Chiron Super Sport — W16" data-loc="Detail, 1600hp badge">
           <div class="frame"><img src="dsc4524.jpg" loading="lazy" alt="DSC4524 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 09</span>
-          <div class="caption-strip"><div class="model">W16 · 1600HP</div><div class="loc">Engine bay detail</div></div>
         </div>
 
         <div class="plate span-2 h-sq" data-full="dsc4452.jpg" data-model="Bugatti Chiron Super Sport" data-loc="Three-quarter, morning light">
           <div class="frame"><img src="dsc4452.jpg" loading="lazy" alt="DSC4452 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 06</span>
-          <div class="caption-strip"><div class="model">Bugatti Chiron SS</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-4 h-wide" data-full="dsc4534.jpg" data-model="Bugatti Chiron vs. Porsche 911 GT3 RS" data-loc="Rear deck, holding court">
           <div class="frame"><img src="dsc4534.jpg" loading="lazy" alt="DSC4534 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 10</span>
-          <div class="caption-strip"><div class="model">Chiron &amp; GT3 RS</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-3 h-sq" data-full="dsc4063.jpg" data-model="Chevrolet Silverado EV ZR2" data-loc="GM Design Studio reveal">
           <div class="frame"><img src="dsc4063.jpg" loading="lazy" alt="DSC4063 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 02</span>
-          <div class="caption-strip"><div class="model">Silverado EV ZR2</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-3 h-sq" data-full="dsc4052.jpg" data-model="Track Concept Livery" data-loc="Pirelli slick, studio floor">
           <div class="frame"><img src="dsc4052.jpg" loading="lazy" alt="DSC4052 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 01</span>
-          <div class="caption-strip"><div class="model">Cadillac Track Concept Livery</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-3 h-tall" data-full="dsc4035.jpg" data-model="BMW E92 M3" data-loc="Cars &amp; coffee, bronze BBS">
           <div class="frame"><img src="dsc4035.jpg" loading="lazy" alt="DSC4035 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 03</span>
-          <div class="caption-strip"><div class="model">Cadillac Track Concept Livery</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-3 h-tall" data-full="dsc4060.jpg" data-model="Pit-Lane Ritual" data-loc="Helmet, BMW M lineup">
           <div class="frame"><img src="dsc4060.jpg" loading="lazy" alt="DSC4060 image"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 04</span>
-          <div class="caption-strip"><div class="model">Corvette C8 GT3.R</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-3 h-wide" data-full="DSC01485.jpg" data-model="Porsche 911 Targa Interior" data-loc="Cognac leather, houndstooth">
           <div class="frame"><img src="DSC01485.jpg" loading="lazy"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 11</span>
-          <div class="caption-strip"><div class="model">Corvette Zo6</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-3 h-wide" data-full="DSC01499.jpg" data-model="Porsche 911 Seat Detail" data-loc="Embossed crest, stitched cognac">
           <div class="frame"><img src="DSC01499.jpg" loading="lazy"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 12</span>
-          <div class="caption-strip"><div class="model"></div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-2 h-tall" data-full="dsc4575.jpg" data-model="Vintage Porsche 911" data-loc="Loading dock, daylight">
           <div class="frame"><img src="dsc4575.jpg" loading="lazy"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 13</span>
-          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-2 h-tall" data-full="dsc4573.jpg" data-model="Vintage Porsche 911" data-loc="Golden hour, front three-quarter">
           <div class="frame"><img src="dsc4573.jpg" loading="lazy"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 14</span>
-          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc"></div></div>
         </div>
 
         <div class="plate span-2 h-tall" data-full="dsc4576.jpg" data-model="Vintage Porsche 911" data-loc="Low angle, brick backdrop">
           <div class="frame"><img src="dsc4576.jpg" loading="lazy"></div>
           <span class="tag-corner"></span>
           <span class="lot-no">LOT 15</span>
-          <div class="caption-strip"><div class="model">Vintage 911</div><div class="loc"></div></div>
         </div>
 
     
